@@ -1,0 +1,63 @@
+:host {
+  display: block;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.search {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  max-width: 760px;
+
+  &__input {
+    flex: 1 1 300px;
+    min-width: 0;
+    height: 52px;
+    padding: 0 16px;
+    border: 1.5px solid var(--color-ink);
+    border-radius: var(--radius-control);
+    background: var(--color-surface);
+    color: var(--color-ink);
+    font: inherit;
+
+    &::placeholder {
+      color: var(--color-muted);
+    }
+  }
+
+  &__button {
+    height: 52px;
+    padding: 0 28px;
+    border-radius: var(--radius-control);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+
+    &--primary {
+      border: 0;
+      background: var(--color-accent);
+      color: #fff;
+    }
+
+    &--secondary {
+      padding: 0 24px;
+      border: 1.5px solid var(--color-ink);
+      background: transparent;
+      color: var(--color-ink);
+    }
+  }
+
+  &__input:focus-visible,
+  &__button:focus-visible {
+    outline: 3px solid var(--color-green);
+    outline-offset: 2px;
+  }
+}

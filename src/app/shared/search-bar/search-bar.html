@@ -1,0 +1,19 @@
+<form class="search" (submit)="onSubmit($event, field.value)">
+  <label class="visually-hidden" for="search-query">Search recipes</label>
+  <input
+    #field
+    id="search-query"
+    class="search__input"
+    type="search"
+    placeholder="Try “pasta” or “chicken”"
+    [value]="initialQuery()"
+  />
+  <button type="submit" class="search__button search__button--primary">Search</button>
+  <button
+    type="button"
+    class="search__button search__button--secondary"
+    (click)="randomRequested.emit()"
+  >
+    Surprise me
+  </button>
+</form>

@@ -1,0 +1,35 @@
+<section class="main">
+  <h1 class="main__title">Are you hungry?</h1>
+  <p class="main__lead">Find your best snack recipe</p>
+
+  <app-search-bar
+    [initialQuery]="query()"
+    (searched)="onSearched($event)"
+    (randomRequested)="onRandomRequested()"
+  />
+</section>
+
+<app-category-list
+  [categories]="categories()"
+  [selected]="selectedCategory()"
+  (categorySelected)="selectedCategory.set($event)"
+/>
+
+<section aria-labelledby="results-title">
+  <div class="results__header">
+    <h2 id="results-title" class="results__title">{{ selectedCategory() }}</h2>
+    <span class="results__count">{{ visibleRecipes().length }} recipes</span>
+    <span class="results__count">Favourires: {{ favouriteCount() }}</span>
+  </div>
+  <div class="grid">
+    @for (recipe of visibleRecipes(); track recipe.id) {
+      <app-recipe-card
+        [recipe]="recipe"
+        [isFavorite]="isFavorite(recipe.id)"
+        (favoriteToggled)="onFavoriteToggle($event)"
+      ></app-recipe-card>
+    } @empty {
+      <p class="grid__empty">No recipes found</p>
+    }
+  </div>
+</section>
