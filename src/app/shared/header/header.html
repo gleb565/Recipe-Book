@@ -1,18 +1,23 @@
-<div class="header">
-  <div class="header__inner">
-    <span class="header__logo">
-      <img class="header__icon" src="icons/logo.svg" alt="" width="36" height="36" />
-      Recipe Book
-    </span>
+<div class="header__inner">
+  <a class="header__logo" routerLink="/">
+    <img class="header__icon" src="icons/logo.svg" alt="" width="32" height="32" />
+    Recipe Book
+  </a>
 
-    <nav class="header__nav" aria-label="Main">
-      <span class="header__link header__link--active">Recipes</span>
-      <span class="header__link">
-        Favorites
-        @if (favoriteServices.count() > 0) {
-          <span class="header__badge">{{ favoriteServices.count() }}</span>
-        }
-      </span>
-    </nav>
-  </div>
+  <nav class="header__nav" aria-label="Main">
+    <a
+      class="header__link"
+      routerLink="/"
+      routerLinkActive="header__link--active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      Recipes
+    </a>
+    <a class="header__link" routerLink="/favorites" routerLinkActive="header__link--active">
+      Favorites
+      @if (favoriteServices.count() > 0) {
+        <span class="header__badge">{{ favoriteServices.count() }}</span>
+      }
+    </a>
+  </nav>
 </div>

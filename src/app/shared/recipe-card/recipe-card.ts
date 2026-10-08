@@ -1,7 +1,9 @@
 import { Component, computed, input, output } from '@angular/core';
 import { RecipeSummary } from '../../core/models/recipe.model';
+import { RouterLink } from '@angular/router';
 
 @Component({
+  imports: [RouterLink],
   selector: 'app-recipe-card',
   styleUrl: './recipe-card.scss',
   templateUrl: './recipe-card.html',

@@ -1,19 +1,27 @@
 <article class="card">
-  <div class="card__media">
-    @if (recipe().picture) {
-      <img class="card__image" [src]="recipe().picture" [alt]="recipe().name" loading="lazy" />
-    } @else {
-      <div class="card__placeholder"></div>
-    }
-  </div>
-
-  <div class="card__body">
-    <div class="card__meta">
-      <span class="card__tag">{{ recipe().category }}</span>
-      <span class="card__area">{{ recipe().area }}</span>
+  <a class="card__link" [routerLink]="['/recipe', recipe().id]">
+    <div class="card__media">
+      @if (recipe().picture) {
+        <img class="card__image" [src]="recipe().picture" [alt]="recipe().name" loading="lazy" />
+      } @else {
+        <div class="card__placeholder"></div>
+      }
     </div>
-    <h3 class="card__title">{{ recipe().name }}</h3>
-  </div>
+
+    <div class="card__body">
+      @if (recipe().category || recipe().area) {
+        <div class="card__meta">
+          @if (recipe().category) {
+            <span class="card__tag">{{ recipe().category }}</span>
+          }
+          @if (recipe().area) {
+            <span class="card__area">{{ recipe().area }}</span>
+          }
+        </div>
+      }
+      <h3 class="card__title">{{ recipe().name }}</h3>
+    </div>
+  </a>
 
   <button
     type="button"

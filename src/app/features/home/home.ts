@@ -1,4 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { RecipeSummary } from '../../core/models/recipe.model';
 import { FavoritesService } from '../../core/services/favorites.service';
@@ -20,6 +21,7 @@ type Status = 'loading' | 'success' | 'error';
 export class Home {
   private readonly recipesService = inject(RecipesService);
   private readonly favoritesService = inject(FavoritesService);
+  private readonly router = inject(Router);
 
   protected readonly recipes = signal<RecipeSummary[]>([]);
   protected readonly categories = signal<string[]>([ALL]);
@@ -62,10 +64,9 @@ export class Home {
   }
 
   protected onRandomRequested(): void {
-    this.recipesService.getRandom().subscribe({
-      next: (recipe) => this.onSearched(recipe.name),
-      error: () => this.status.set('error'),
-    });
+    this.recipesService
+      .getRandom()
+      .subscribe((recipe) => this.router.navigate(['/recipe', recipe.id]));
   }
 
   protected isFavorite(id: string): boolean {
