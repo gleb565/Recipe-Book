@@ -1,8 +1,9 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { CategoryList } from '../../shared/category-list/category-list';
 import { RecipeCard } from '../../shared/recipe-card/recipe-card';
 import { SearchBar } from '../../shared/search-bar/search-bar';
-import { RECIPES_MOCK } from '../../core/mocks/recipes.mock';
+import { RecipesService } from '../../core/services/recipes.services';
+import { FavoritesService } from '../../core/services/favorites.service';
 
 const ALL = 'All';
 
@@ -13,10 +14,19 @@ const ALL = 'All';
   templateUrl: './home.html',
 })
 export class Home {
-  protected readonly recipes = signal(RECIPES_MOCK);
+  private readonly recipesServices = inject(RecipesService);
+  private readonly favoriteServices = inject(FavoritesService);
+  protected readonly recipes = signal(this.recipesServices.getAll());
   protected readonly selectedCategory = signal(ALL);
   protected readonly query = signal('');
-  protected readonly favouriteIds = signal<string[]>([]);
+
+  protected isFavorite(id: string): boolean {
+    return this.favoriteServices.isFavorite(id);
+  }
+
+  protected onFavoriteToggle(id: string): void {
+    this.favoriteServices.toggle(id);
+  }
 
   protected onSearched(text: string): void {
     this.query.set(text);
@@ -30,8 +40,6 @@ export class Home {
     ALL,
     ...new Set(this.recipes().map((recipe) => recipe.category)),
   ]);
-
-  protected readonly favouriteCount = computed(() => this.favouriteIds().length);
 
   protected onRandomRequested(): void {
     const recipes = this.recipes();
@@ -50,14 +58,4 @@ export class Home {
         recipe.name.toLowerCase().includes(query),
     );
   });
-
-  protected onFavoriteToggle(id: string): void {
-    this.favouriteIds.update((ids) =>
-      ids.includes(id) ? ids.filter((x) => x != id) : [...ids, id],
-    );
-  }
-
-  protected isFavorite(id: string): boolean {
-    return this.favouriteIds().includes(id);
-  }
 }

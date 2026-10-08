@@ -1,0 +1,18 @@
+<div class="header">
+  <div class="header__inner">
+    <span class="header__logo">
+      <img class="header__icon" src="icons/logo.svg" alt="" width="36" height="36" />
+      Recipe Book
+    </span>
+
+    <nav class="header__nav" aria-label="Main">
+      <span class="header__link header__link--active">Recipes</span>
+      <span class="header__link">
+        Favorites
+        @if (favoriteServices.count() > 0) {
+          <span class="header__badge">{{ favoriteServices.count() }}</span>
+        }
+      </span>
+    </nav>
+  </div>
+</div>

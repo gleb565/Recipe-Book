@@ -17,4 +17,8 @@ export class RecipeCard {
       ? `Remove ${this.recipe().name} from favorites`
       : `Save ${this.recipe().name} to favorites`,
   );
+
+  protected readonly heartIcon = computed(() =>
+    this.isFavorite() ? 'icons/active_favorite.svg' : 'icons/favorite.svg',
+  );
 }
