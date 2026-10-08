@@ -1,6 +1,6 @@
 # Recipe Book
 
-Сервис для поиска рецептов. Данные берутся из открытого API [TheMealDB](https://www.themealdb.com/api.php).
+Сервис для поиска рецептов. Данные берутся из открытого API [TheMealDB](https://www.themealdb.com/api.php). (нужен VPN)
 
 **Демо:** https://gleb565.github.io/Recipe-Book/
 
