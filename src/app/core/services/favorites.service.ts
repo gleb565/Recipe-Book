@@ -14,4 +14,8 @@ export class FavoritesService {
   toggle(id: string): void {
     this._ids.update((ids) => (ids.includes(id) ? ids.filter((x) => x !== id) : [...ids, id]));
   }
+
+  clear(): void {
+    this._ids.set([]);
+  }
 }

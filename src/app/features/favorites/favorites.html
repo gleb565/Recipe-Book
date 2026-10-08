@@ -1,1 +1,29 @@
-<p>favorites works!</p>
+<div class="head">
+  <div class="head__text">
+    <h1 class="head__title">Favorites</h1>
+    <p class="head__lead">
+      {{ favoritesService.count() }} saved
+      {{ favoritesService.count() === 1 ? 'recipe' : 'recipes' }}
+    </p>
+  </div>
+
+  @if (favoritesService.count() > 0) {
+    <button type="button" class="head__clear" (click)="clearAll()">Clear all</button>
+  }
+</div>
+
+@if (recipes().length > 0) {
+  <div class="grid">
+    @for (recipe of recipes(); track recipe.id) {
+      <app-recipe-card
+        [recipe]="recipe"
+        [isFavorite]="favoritesService.isFavorite(recipe.id)"
+        (favoriteToggled)="favoritesService.toggle($event)"
+      ></app-recipe-card>
+    }
+  </div>
+} @else {
+  <div class="empty">
+    <h2 class="empty__title">No favorites yet</h2>
+  </div>
+}
