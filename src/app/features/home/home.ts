@@ -1,5 +1,7 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
+import { catchError, map, of, switchMap } from 'rxjs';
 
 import { RecipeSummary } from '../../core/models/recipe.model';
 import { FavoritesService } from '../../core/services/favorites.service';
@@ -9,8 +11,6 @@ import { RecipeCard } from '../../shared/recipe-card/recipe-card';
 import { SearchBar } from '../../shared/search-bar/search-bar';
 
 const ALL = 'All';
-
-type Status = 'loading' | 'success' | 'error';
 
 @Component({
   selector: 'app-home',
@@ -23,44 +23,43 @@ export class Home {
   private readonly favoritesService = inject(FavoritesService);
   private readonly router = inject(Router);
 
-  protected readonly recipes = signal<RecipeSummary[]>([]);
-  protected readonly categories = signal<string[]>([ALL]);
-  protected readonly selectedCategory = signal(ALL);
-  protected readonly query = signal('');
-  protected readonly status = signal<Status>('loading');
+  readonly q = input<string>();
+  readonly category = input<string>();
 
-  constructor() {
-    this.recipesService.getCategories().subscribe((list) => this.categories.set([ALL, ...list]));
-    this.reload();
-  }
+  protected readonly query = computed(() => this.q() ?? '');
+  protected readonly selectedCategory = computed(() => this.category() ?? ALL);
 
-  protected reload(): void {
-    const category = this.selectedCategory();
-    const request$ =
-      category === ALL
-        ? this.recipesService.search(this.query())
-        : this.recipesService.getByCategory(category);
+  protected readonly categories = toSignal(
+    this.recipesService.getCategories().pipe(
+      map((list) => [ALL, ...list]),
+      catchError(() => of([ALL])),
+    ),
+    { initialValue: [ALL] },
+  );
 
-    this.status.set('loading');
-    request$.subscribe({
-      next: (list) => {
-        this.recipes.set(list);
-        this.status.set('success');
-      },
-      error: () => this.status.set('error'),
+  protected readonly recipes = toSignal(
+    toObservable(computed(() => ({ query: this.query(), category: this.selectedCategory() }))).pipe(
+      switchMap(({ query, category }) =>
+        (category === ALL
+          ? this.recipesService.search(query)
+          : this.recipesService.getByCategory(category)
+        ).pipe(catchError(() => of([] as RecipeSummary[]))),
+      ),
+    ),
+    { initialValue: [] as RecipeSummary[] },
+  );
+
+  protected onSearched(text: string): void {
+    this.router.navigate([], {
+      queryParams: { q: text || null, category: null },
+      replaceUrl: true,
     });
   }
 
-  protected onSearched(text: string): void {
-    this.query.set(text);
-    this.selectedCategory.set(ALL);
-    this.reload();
-  }
-
   protected onCategorySelected(category: string): void {
-    this.selectedCategory.set(category);
-    this.query.set('');
-    this.reload();
+    this.router.navigate([], {
+      queryParams: { category: category === ALL ? null : category, q: null },
+    });
   }
 
   protected onRandomRequested(): void {

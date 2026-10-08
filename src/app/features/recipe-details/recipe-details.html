@@ -1,1 +1,77 @@
-<p>recipe-details works!</p>
+<a class="back" routerLink="/">
+  <span aria-hidden="true">←</span>
+  Back to recipes
+</a>
+
+@if (recipe(); as r) {
+  <div class="recipe">
+    <div class="recipe__media">
+      <img class="recipe__image" [src]="r.picture" [alt]="r.name" />
+    </div>
+
+    <div class="recipe__info">
+      <div class="recipe__tags">
+        @if (r.category) {
+          <span class="recipe__tag recipe__tag--category">{{ r.category }}</span>
+        }
+        @if (r.area) {
+          <span class="recipe__tag">{{ r.area }}</span>
+        }
+        @for (tag of r.tags; track tag) {
+          <span class="recipe__tag">{{ tag }}</span>
+        }
+      </div>
+
+      <h1 class="recipe__title">{{ r.name }}</h1>
+
+      <div class="recipe__actions">
+        <button
+          type="button"
+          class="btn"
+          [class.btn--accent]="favoritesService.isFavorite(r.id)"
+          [attr.aria-pressed]="favoritesService.isFavorite(r.id)"
+          (click)="toggleFavorite()"
+        >
+          {{ favoritesService.isFavorite(r.id) ? 'In favorites' : 'Save to favorites' }}
+        </button>
+
+        @if (r.youtubeUrl) {
+          <a class="btn" [href]="r.youtubeUrl" target="_blank" rel="noopener noreferrer">
+            Watch on YouTube
+          </a>
+        }
+        @if (r.sourceUrl) {
+          <a class="btn" [href]="r.sourceUrl" target="_blank" rel="noopener noreferrer"> Source </a>
+        }
+      </div>
+
+      <section class="section" aria-labelledby="ingredients-title">
+        <h2 id="ingredients-title" class="section__title">Ingredients</h2>
+        <ul class="ingredients">
+          @for (item of r.ingredients; track $index) {
+            <li class="ingredients__item">
+              <span class="ingredients__measure">{{ item.measure }}</span>
+              <span>{{ item.name }}</span>
+            </li>
+          }
+        </ul>
+      </section>
+    </div>
+  </div>
+
+  <section class="section section--narrow" aria-labelledby="steps-title">
+    <h2 id="steps-title" class="section__title">Instructions</h2>
+    <ol class="steps">
+      @for (step of r.steps; track $index) {
+        <li class="steps__item">
+          <span class="steps__number">{{ $index + 1 }}</span>
+          <p class="steps__text">{{ step }}</p>
+        </li>
+      }
+    </ol>
+  </section>
+} @else if (recipe() === null) {
+  <div class="state">
+    <h1 class="state__title">Recipe not found</h1>
+  </div>
+}

@@ -5,7 +5,8 @@
     id="search-query"
     class="search__input"
     type="search"
-    placeholder="Try “pasta” or “chicken”"
+    placeholder="Pasta"
+    (input)="onInput(field.value)"
     [value]="initialQuery()"
   />
   <button type="submit" class="search__button search__button--primary">Search</button>
