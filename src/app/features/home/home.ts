@@ -1,4 +1,4 @@
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { catchError, map, of, switchMap } from 'rxjs';
@@ -22,6 +22,8 @@ export class Home {
   private readonly recipesService = inject(RecipesService);
   private readonly favoritesService = inject(FavoritesService);
   private readonly router = inject(Router);
+
+  protected readonly debug = signal('');
 
   readonly q = input<string>();
   readonly category = input<string>();
